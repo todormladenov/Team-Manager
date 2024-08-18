@@ -6,7 +6,7 @@ import Login from './components/auth/Login'
 import Register from './components/auth/Register'
 import CreateTeam from './components/teams/CreateTeam'
 import EditTeam from './components/teams/EditTeam'
-import TeamsCatalog from './components/teams/TeamsCatalog'
+import TeamsCatalog from './components/teams/teams-catalog/TeamsCatalog'
 
 function App() {
   return (

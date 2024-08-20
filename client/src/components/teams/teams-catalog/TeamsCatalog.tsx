@@ -1,19 +1,11 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAllTeams } from "../../../services/teamsAPI";
-import { Teams } from "../../../types/teams";
 import TeamLayout from "./TeamLayout";
+import { useTeams } from "../../../hooks/useTeams";
+import { Teams } from "../../../types/teams";
 
 export default function TeamsCatalog() {
-    const [teams, setTeams] = useState<Teams[] | []>([]);
+    const teams: Teams[] = useTeams();
 
-    useEffect(() => {
-        (async () => {
-            const teams: Teams[] = await getAllTeams();
-
-            setTeams(teams);
-        })()
-    }, [])
     return (
         <section id="browse">
 

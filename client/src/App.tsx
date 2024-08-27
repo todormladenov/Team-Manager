@@ -7,6 +7,7 @@ import Register from './components/auth/Register'
 import CreateTeam from './components/teams/CreateTeam'
 import EditTeam from './components/teams/EditTeam'
 import TeamsCatalog from './components/teams/teams-catalog/TeamsCatalog'
+import TeamDetails from './components/teams/TeamDetails'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path='/teams' element={<TeamsCatalog />} />
           <Route path='/teams/create-team' element={<CreateTeam />} />
           <Route path='/teams/edit-team/:teamId' element={<EditTeam />} />
+          <Route path='/teams/details/:teamId' element={<TeamDetails />} />
         </Routes>
       </div>
     </>

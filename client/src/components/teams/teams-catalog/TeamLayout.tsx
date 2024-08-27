@@ -9,7 +9,7 @@ export default function TeamLayout({ team }: { team: Teams }) {
                 <h2>{team.name}</h2>
                 <p>{team.description}</p>
                 <span className="details">0 Members</span>
-                <div><Link to={`/teams/${team._id}`} className="action">See details</Link></div>
+                <div><Link to={`/teams/details/${team._id}`} className="action">See details</Link></div>
             </div>
         </article>
     );

@@ -1,14 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useGetOneTeam } from "../../hooks/useGetOneTeam";
 
 export default function TeamDetails() {
+    const { teamId } = useParams();
+    const team = useGetOneTeam(teamId);
+    
     return (
         <section id="team-home">
             <article className="layout">
-                <img src="./assets/rocket.png" className="team-logo left-col" />
+                <img src={team?.logoUrl} className="team-logo left-col" />
                 <div className="tm-preview">
-                    <h2>Team Rocket</h2>
-                    <p>Gotta catch 'em all!</p>
-                    <span className="details">3 Members</span>
+                    <h2>{team?.name}</h2>
+                    <p>{team?.description}</p>
+                    <span className="details">{team?.members.length} Members</span>
                     <div>
                         <Link to="#" className="action">Edit team</Link>
                         <Link to="#" className="action">Join team</Link>

@@ -1,15 +1,32 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LoginFormValues, resolver } from "./loginFormValidation";
+import { login } from "../../../services/authAPI";
+import { User } from "../../../types/user";
+import { useState } from "react";
 
 export default function Login() {
+    const [responseError, setResponseError] = useState<string | undefined>(undefined);
+    const navigator = useNavigate();
+
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<LoginFormValues>({ resolver });
 
-    const loginHandler = handleSubmit((data) => console.log(data))
+    const loginHandler = handleSubmit(async (data) => {
+        try {
+            const user: User = await login(data.email, data.password);
+            navigator('/');
+        } catch (error) {
+            if (error instanceof Error) {
+                setResponseError(error.message);
+            } else {
+                setResponseError('Something went wrong please try again later');
+            }
+        }
+    });
 
     return (
         <section id="login">
@@ -18,6 +35,7 @@ export default function Login() {
                     <h1>Login</h1>
                 </header>
                 <form id="login-form" className="main-form pad-large" onSubmit={loginHandler}>
+                    {responseError && <div className="error">{responseError}</div>}
 
                     <label>E-mail: <input type="text" {...register('email')} /></label>
                     {errors.email && <div className="error">{errors.email?.message}</div>}

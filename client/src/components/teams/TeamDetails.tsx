@@ -1,10 +1,15 @@
 import { Link, useParams } from "react-router-dom";
 import { useGetOneTeam } from "../../hooks/useGetOneTeam";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { checkUserStatus } from "../../utils/checkUserStatus";
 
 export default function TeamDetails() {
+    const { isAuth, _id } = useContext(AuthContext);
     const { teamId } = useParams();
     const team = useGetOneTeam(teamId);
-    
+    const userStatus = checkUserStatus(team, _id);
+
     return (
         <section id="team-home">
             <article className="layout">
@@ -13,12 +18,14 @@ export default function TeamDetails() {
                     <h2>{team?.name}</h2>
                     <p>{team?.description}</p>
                     <span className="details">{team?.members.length} Members</span>
-                    <div>
-                        <Link to="#" className="action">Edit team</Link>
-                        <Link to="#" className="action">Join team</Link>
-                        <Link to="#" className="action invert">Leave team</Link>
-                        Membership pending. <Link to="#">Cancel request</Link>
-                    </div>
+                    {isAuth &&
+                        <div>
+                            {userStatus === 'owner' && <Link to="#" className="action">Edit team</Link>}
+                            {userStatus === 'member' && <Link to="#" className="action invert">Leave team</Link>}
+                            {userStatus === 'nonMember' && <Link to="#" className="action">Join team</Link>}
+                            {userStatus === 'pending' && <>Membership pending. <Link to="#">Cancel request</Link></>}
+                        </div>
+                    }
                 </div>
                 <div className="pad-large">
                     <h3>Members</h3>
@@ -42,6 +49,6 @@ export default function TeamDetails() {
                     </ul>
                 </div>
             </article>
-        </section>
+        </section >
     );
 }

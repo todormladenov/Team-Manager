@@ -3,9 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { LoginFormValues, resolver } from "./loginFormValidation";
 import { login } from "../../../services/authAPI";
 import { User } from "../../../types/user";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function Login() {
+    const authContext = useContext(AuthContext);
     const [responseError, setResponseError] = useState<string | undefined>(undefined);
     const navigator = useNavigate();
 
@@ -18,6 +20,7 @@ export default function Login() {
     const loginHandler = handleSubmit(async (data) => {
         try {
             const user: User = await login(data.email, data.password);
+            authContext.changeAuthState(user);
             navigator('/');
         } catch (error) {
             if (error instanceof Error) {

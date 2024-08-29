@@ -1,5 +1,5 @@
 import { User } from "../types/user";
-import { post } from "./api";
+import { get, post } from "./api";
 
 const BASE_URL = 'http://localhost:3030/users';
 
@@ -8,3 +8,5 @@ export const login = (email: string, password: string): Promise<User> =>
 
 export const register = (email: string, username: string, password: string): Promise<User> =>
     post<User>(`${BASE_URL}/register`, { email, username, password });
+
+export const getUser = () => get<User>(`${BASE_URL}/me`);

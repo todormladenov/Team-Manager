@@ -8,11 +8,12 @@ export const AuthContext = createContext<UserContext>({
     _id: '',
     accessToken: '',
     isAuth: false,
-    changeAuthState: () => null
+    changeAuthState: () => null,
+    logout: () => null
 });
 
 export function AuthContextProvider({ children }: { children: ReactNode }) {
-    const { authState, changeAuthState, isAuthenticating } = useAuth();
+    const { authState, changeAuthState, isAuthenticating, logout } = useAuth();
 
     const contextData: UserContext = {
         email: authState?.email || '',
@@ -20,7 +21,8 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
         _id: authState?._id || '',
         accessToken: authState?.accessToken || '',
         isAuth: !!authState?._id,
-        changeAuthState: changeAuthState
+        changeAuthState: changeAuthState,
+        logout: logout
     }
 
     return (

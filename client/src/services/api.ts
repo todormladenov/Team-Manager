@@ -1,11 +1,24 @@
+import { getAccessToken } from "../utils/sesionTokenUtil";
+
 async function apiRequester<T>(method: string, url: string, data?: any): Promise<T> {
     let options: RequestInit = {
         method,
+        headers: {}
+    }
+
+    const accessToken = getAccessToken();
+
+    if (accessToken) {
+        options.headers = {
+            ...options.headers,
+            ['X-Authorization']: accessToken,
+        }
     }
 
     if (data !== undefined) {
         options.headers = {
-            ['Content-type']: 'application/json'
+            ...options.headers,
+            ['Content-type']: 'application/json',
         }
         options.body = JSON.stringify(data);
     }

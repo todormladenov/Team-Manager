@@ -10,5 +10,6 @@ export interface Teams {
 }
 
 export interface TeamWithMembers extends Teams {
-    members: Member[]
+    members: Member[],
+    pendingMembers: Member[],
 }

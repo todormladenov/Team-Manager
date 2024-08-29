@@ -20,7 +20,7 @@ export default function TeamDetails() {
                     <span className="details">{team?.members.length} Members</span>
                     {isAuth &&
                         <div>
-                            {userStatus === 'owner' && <Link to="#" className="action">Edit team</Link>}
+                            {userStatus === 'owner' && <Link to={`/teams/edit-team/${teamId}`} className="action">Edit team</Link>}
                             {userStatus === 'member' && <Link to="#" className="action invert">Leave team</Link>}
                             {userStatus === 'nonMember' && <Link to="#" className="action">Join team</Link>}
                             {userStatus === 'pending' && <>Membership pending. <Link to="#">Cancel request</Link></>}
@@ -31,21 +31,22 @@ export default function TeamDetails() {
                     <h3>Members</h3>
                     <ul className="tm-members">
                         <li>My Username</li>
-                        <li>James<Link to="#" className="tm-control action">Remove from team</Link></li>
-                        <li>Meowth<Link to="#" className="tm-control action">Remove from team</Link></li>
+                        {team?.members.map(member =>
+                            <li key={member._id}>{member.user.username}
+                                <Link to="#" className="tm-control action">Remove from team</Link>
+                            </li>)
+                        }
                     </ul>
                 </div>
                 <div className="pad-large">
                     <h3>Membership Requests</h3>
                     <ul className="tm-members">
-                        <li>John
-                            <Link to="#" className="tm-control action">Approve</Link>
-                            <Link to="#" className="tm-control action">Decline</Link>
-                        </li>
-                        <li>Preya
-                            <Link to="#" className="tm-control action">Approve</Link>
-                            <Link to="#" className="tm-control action">Decline</Link>
-                        </li>
+                        {team?.pendingMembers.map(member =>
+                            <li key={member._id}>{member.user.username}
+                                <Link to="#" className="tm-control action">Approve</Link>
+                                <Link to="#" className="tm-control action">Decline</Link>
+                            </li>
+                        )}
                     </ul>
                 </div>
             </article>

@@ -3,12 +3,22 @@ import { useGetOneTeam } from "../../hooks/useGetOneTeam";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { checkUserStatus } from "../../utils/checkUserStatus";
+import { deleteMember } from "../../services/membersAPI";
 
 export default function TeamDetails() {
     const { isAuth, _id } = useContext(AuthContext);
     const { teamId } = useParams();
-    const team = useGetOneTeam(teamId);
-    const userStatus = checkUserStatus(team, _id);
+    const { team, changeTeamState, ActionType } = useGetOneTeam(teamId);
+    const { userStatus, userMembershipId } = checkUserStatus(team, _id);
+
+    const removeMemberHandler = async (memberId: string) => {
+        try {
+            await deleteMember(memberId);
+            changeTeamState(ActionType.REMOVE_MEMBER, memberId);
+        } catch (error) {
+            //Add Error handling 
+        }
+    }
 
     return (
         <section id="team-home">
@@ -21,7 +31,7 @@ export default function TeamDetails() {
                     {isAuth &&
                         <div>
                             {userStatus === 'owner' && <Link to={`/teams/edit-team/${teamId}`} className="action">Edit team</Link>}
-                            {userStatus === 'member' && <Link to="#" className="action invert">Leave team</Link>}
+                            {userStatus === 'member' && <Link to="#" onClick={() => removeMemberHandler(userMembershipId)} className="action invert">Leave team</Link>}
                             {userStatus === 'nonMember' && <Link to="#" className="action">Join team</Link>}
                             {userStatus === 'pending' && <>Membership pending. <Link to="#">Cancel request</Link></>}
                         </div>
@@ -33,7 +43,9 @@ export default function TeamDetails() {
                         <li>My Username</li>
                         {team?.members.map(member =>
                             <li key={member._id}>{member.user.username}
-                                <Link to="#" className="tm-control action">Remove from team</Link>
+                                {userStatus === 'owner' &&
+                                    <Link to='#' onClick={() => removeMemberHandler(member._id)} className="tm-control action">Remove from team</Link>
+                                }
                             </li>)
                         }
                     </ul>

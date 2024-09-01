@@ -2,17 +2,20 @@ import { useEffect, useReducer } from "react"
 import { TeamWithMembers } from "../types/teams"
 import { getOneTeamById } from "../services/teamsAPI";
 import { getAllTeamMembers, getAllTeamPendingMembers } from "../services/membersAPI";
+import { Member } from "../types/members";
 
 enum ActionType {
     GET = 'GET',
     REMOVE_MEMBER = 'REMOVE_MEMBER',
     REMOVE_PENDING = 'REMOVE_PENDING',
+    JOIN_TEAM = 'JOIN_TEAM'
 }
 
 interface StateAction {
     type: ActionType;
     payload: TeamWithMembers;
-    memberId?: string
+    memberId?: string;
+    member?: Member
 }
 
 const initialState: TeamWithMembers = {
@@ -40,6 +43,11 @@ function teamReducer(state: TeamWithMembers, action: StateAction): TeamWithMembe
                 ...state,
                 pendingMembers: action.payload.pendingMembers.filter(member => member._id !== action.memberId)
             }
+        case ActionType.JOIN_TEAM:
+            return {
+                ...state,
+                pendingMembers: [...action.payload.pendingMembers, action.member!]
+            }
         default:
             return state;
     }
@@ -62,8 +70,8 @@ export const useGetOneTeam = (teamId: string | undefined) => {
         })()
     }, [teamId]);
 
-    const changeTeamState = (type: ActionType, memberId?: string) => {
-        dispatch({ type, payload: team, memberId })
+    const changeTeamState = (type: ActionType, memberId?: string, member?: Member) => {
+        dispatch({ type, payload: team, memberId, member });
     }
 
     return { team, changeTeamState, ActionType }

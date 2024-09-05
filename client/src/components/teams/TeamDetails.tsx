@@ -3,7 +3,7 @@ import { useGetOneTeam } from "../../hooks/useGetOneTeam";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useCheckUserStatus } from "../../hooks/useCheckUserStatus";
-import { deleteMember, joinTeamReq } from "../../services/membersAPI";
+import { approveJoinTeamReq, deleteMember, getMemberById, joinTeamReq } from "../../services/membersAPI";
 
 export default function TeamDetails() {
     const { isAuth, _id } = useContext(AuthContext);
@@ -17,10 +17,10 @@ export default function TeamDetails() {
             changeTeamState(ActionType.JOIN_TEAM, undefined, member);
             changeUserInfoState('pending', member._id);
         } catch (error) {
-            
+
         }
     }
-    
+
     const removeMemberHandler = async (memberId: string) => {
         try {
             await deleteMember(memberId);
@@ -30,7 +30,7 @@ export default function TeamDetails() {
             //Add Error handling 
         }
     }
-    
+
     const removePendingHandler = async (memberId: string) => {
         try {
             await deleteMember(memberId);
@@ -38,6 +38,17 @@ export default function TeamDetails() {
             changeUserInfoState('nonMember', '');
         } catch (error) {
             //Add Error handling 
+        }
+    }
+
+    const approvePendingHandler = async (memberId: string) => {
+        try {
+            await approveJoinTeamReq(memberId, { status: 'member' });
+            const member = await getMemberById(memberId);
+            changeTeamState(ActionType.APPROVE_PENDING, member._id, member);
+            changeUserInfoState('member', member._id);
+        } catch (error) {
+
         }
     }
 
@@ -61,9 +72,8 @@ export default function TeamDetails() {
                 <div className="pad-large">
                     <h3>Members</h3>
                     <ul className="tm-members">
-                        <li>My Username</li>
                         {team?.members.map(member =>
-                            <li key={member._id}>{member.user.username}
+                            <li key={member._id}>{member.user?.username}
                                 {userStatus === 'owner' &&
                                     <Link to='#' onClick={() => removeMemberHandler(member._id)} className="tm-control action">Remove from team</Link>
                                 }
@@ -76,8 +86,8 @@ export default function TeamDetails() {
                         <h3>Membership Requests</h3>
                         <ul className="tm-members">
                             {team?.pendingMembers.map(member =>
-                                <li key={member._id}>{member.user.username}
-                                    <Link to="#" className="tm-control action">Approve</Link>
+                                <li key={member._id}>{member.user?.username}
+                                    <Link to="#" onClick={() => approvePendingHandler(member._id)} className="tm-control action">Approve</Link>
                                     <Link to="#" onClick={() => removePendingHandler(member._id)} className="tm-control action">Decline</Link>
                                 </li>
                             )}

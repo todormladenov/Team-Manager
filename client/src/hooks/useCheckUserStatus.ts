@@ -9,9 +9,9 @@ export const useCheckUserStatus = (team: TeamWithMembers | undefined, userId: st
         if (userId && team?._ownerId === userId) {
             setUserStatus('owner');
         } else if (userId) {
-            let membership = team?.members.find(member => member.user._id === userId);
+            let membership = team?.members.find(member => member._ownerId === userId);
             if (!membership) {
-                membership = team?.pendingMembers.find(member => member.user._id === userId);
+                membership = team?.pendingMembers.find(member => member._ownerId === userId);
                 if (!membership) {
                     setUserStatus('nonMember');
                 }
@@ -23,7 +23,7 @@ export const useCheckUserStatus = (team: TeamWithMembers | undefined, userId: st
                 setUserStatus('member');
             }
         }
-    }, []);
+    }, [team]);
 
     const changeUserInfoState = (status: string, memberId: string) => {
         setUserStatus(status);

@@ -8,7 +8,8 @@ enum ActionType {
     GET = 'GET',
     REMOVE_MEMBER = 'REMOVE_MEMBER',
     REMOVE_PENDING = 'REMOVE_PENDING',
-    JOIN_TEAM = 'JOIN_TEAM'
+    JOIN_TEAM = 'JOIN_TEAM',
+    APPROVE_PENDING = 'APPROVE_PENDING'
 }
 
 interface StateAction {
@@ -47,6 +48,12 @@ function teamReducer(state: TeamWithMembers, action: StateAction): TeamWithMembe
             return {
                 ...state,
                 pendingMembers: [...action.payload.pendingMembers, action.member!]
+            }
+        case ActionType.APPROVE_PENDING:
+            return {
+                ...state,
+                members: [...action.payload.members, action.member!],
+                pendingMembers: action.payload.pendingMembers.filter(member => member._id !== action.memberId)
             }
         default:
             return state;

@@ -5,7 +5,7 @@ export interface Member {
     _createdOn: number,
     _updatedOn: number,
     _id: string,
-    user: {
+    user?: {
         email: string,
         username: string,
         _id: string

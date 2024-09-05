@@ -3,23 +3,28 @@ import { Link, useNavigate } from "react-router-dom";
 import { RegisterFormValues, schema } from "./registerFormValidation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as auth from "../../../services/authAPI"
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import { User } from "../../../types/user";
 
 export default function Register() {
+    const authContext = useContext(AuthContext);
+    const [responseError, setResponseError] = useState<string | undefined>(undefined);
+    const navigator = useNavigate();
+
     const {
         register,
         handleSubmit,
         formState: { errors }
     } = useForm<RegisterFormValues>({ resolver: yupResolver(schema) });
-    const [responseError, setResponseError] = useState<string | undefined>(undefined);
-    const navigator = useNavigate();
 
     const registerHandler = handleSubmit(async (data) => {
         const { email, username, password } = data;
 
         try {
-            const user = await auth.register(email, username, password);
-            navigator('/')
+            const user: User = await auth.register(email, username, password);
+            authContext.changeAuthState(user);  
+            navigator('/');
         } catch (error) {
             if (error instanceof Error) {
                 setResponseError(error.message);

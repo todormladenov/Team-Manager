@@ -21,3 +21,4 @@ export const joinTeamReq = (teamId: string) => post<Member>(BASE_URL, { teamId }
 
 export const deleteMember = (memberId: string) => deleteReq(`${BASE_URL}/${memberId}`);
 
+export const getMembers = (teamId: string) => get<Member[]>(`${BASE_URL}?where=teamId%3D%22${teamId}%22%20AND%20status%3D%22member%22`);

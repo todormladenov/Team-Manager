@@ -9,6 +9,7 @@ import EditTeam from './components/teams/EditTeam'
 import TeamsCatalog from './components/teams/teams-catalog/TeamsCatalog'
 import TeamDetails from './components/teams/TeamDetails'
 import { AuthContextProvider } from './components/context/AuthContext'
+import MyTeams from './components/teams/my-teams/MyTeams'
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path='/teams/create-team' element={<CreateTeam />} />
             <Route path='/teams/edit-team/:teamId' element={<EditTeam />} />
             <Route path='/teams/details/:teamId' element={<TeamDetails />} />
+            <Route path='/teams/my-teams' element={<MyTeams />} />
           </Routes>
         </div>
       </AuthContextProvider>

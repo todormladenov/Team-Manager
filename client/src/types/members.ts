@@ -1,3 +1,5 @@
+import { Teams } from "./teams"
+
 export interface Member {
     _ownerId: string,
     teamId: string,
@@ -10,4 +12,8 @@ export interface Member {
         username: string,
         _id: string
     }
+}
+
+export interface MemberWithTeams extends Member {
+    team: Teams
 }

@@ -17,7 +17,7 @@ export default function TeamsCatalog() {
             </article>
             {isAuth &&
                 <article className="layout narrow">
-                    <div className="pad-small"><Link to="#" className="action cta">Create Team</Link></div>
+                    <div className="pad-small"><Link to="/teams/create-team" className="action cta">Create Team</Link></div>
                 </article>
             }
 

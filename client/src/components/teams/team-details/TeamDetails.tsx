@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useGetOneTeam } from "../../../hooks/useGetOneTeam";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
@@ -6,6 +6,7 @@ import { useCheckUserStatus } from "../../../hooks/useCheckUserStatus";
 import { useTeamActions } from "../../../hooks/useTeamActions";
 import UserActions from "./team-details-components/UserActions ";
 import MemberList from "./team-details-components/MemberList";
+import MembershipRequestsList from "./team-details-components/MembershipRequestsListProps";
 
 export default function TeamDetails() {
     const { isAuth, _id } = useContext(AuthContext);
@@ -67,17 +68,11 @@ export default function TeamDetails() {
                 />
 
                 {userStatus === 'owner' &&
-                    <div className="pad-large">
-                        <h3>Membership Requests</h3>
-                        <ul className="tm-members">
-                            {team?.pendingMembers.map(member =>
-                                <li key={member._id}>{member.user?.username}
-                                    <Link to="#" onClick={() => approvePendingHandler(member._id)} className="tm-control action">Approve</Link>
-                                    <Link to="#" onClick={() => removePendingHandler(member._id)} className="tm-control action">Decline</Link>
-                                </li>
-                            )}
-                        </ul>
-                    </div>
+                    <MembershipRequestsList
+                        pendingMembers={team.pendingMembers}
+                        onApprovePending={approvePendingHandler}
+                        onRemovePending={removePendingHandler}
+                    />
                 }
             </article>
         </section >

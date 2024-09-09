@@ -7,6 +7,7 @@ import { useTeamActions } from "../../../hooks/useTeamActions";
 import UserActions from "./team-details-components/UserActions ";
 import MemberList from "./team-details-components/MemberList";
 import MembershipRequestsList from "./team-details-components/MembershipRequestsListProps";
+import TeamInfo from "./team-details-components/TeamInfo";
 
 export default function TeamDetails() {
     const { isAuth, _id } = useContext(AuthContext);
@@ -46,20 +47,17 @@ export default function TeamDetails() {
     return (
         <section id="team-home">
             <article className="layout">
-                <img src={team?.logoUrl} className="team-logo left-col" />
-                <div className="tm-preview">
-                    <h2>{team?.name}</h2>
-                    <p>{team?.description}</p>
-                    <span className="details">{team?.members.length} Members</span>
-                    {isAuth &&
-                        <UserActions
-                            userStatus={userStatus}
-                            teamId={teamId}
-                            onJoin={joinTeamHandler}
-                            onLeave={() => removeMemberHandler(userMembershipId)}
-                            onCancelRequest={() => removePendingHandler(userMembershipId)}
-                        />}
-                </div>
+                
+                <TeamInfo team={team} />
+
+                {isAuth &&
+                    <UserActions
+                        userStatus={userStatus}
+                        teamId={teamId}
+                        onJoin={joinTeamHandler}
+                        onLeave={() => removeMemberHandler(userMembershipId)}
+                        onCancelRequest={() => removePendingHandler(userMembershipId)}
+                    />}
 
                 <MemberList
                     members={team.members}

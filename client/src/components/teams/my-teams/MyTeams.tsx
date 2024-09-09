@@ -1,19 +1,13 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { getAllUserMemberTeams } from "../../../services/membersAPI";
 import { MemberWithTeams } from "../../../types/members";
 import TeamLayout from "../teams-catalog/TeamLayout";
+import { useMyTeams } from "../../../hooks/useMyTeams";
+import { Link } from "react-router-dom";
 
 export default function MyTeams() {
     const { _id } = useContext(AuthContext);
-    const [teamsMember, setTeamsMember] = useState<MemberWithTeams[]>([]);
-
-    useEffect(() => {
-        (async () => {
-            const teamsMember = await getAllUserMemberTeams(_id);
-            setTeamsMember(() => teamsMember);
-        })();
-    }, [_id]);
+    const teamsMember: MemberWithTeams[] = useMyTeams(_id);
 
     return (
         <section id="my-teams">
@@ -29,10 +23,12 @@ export default function MyTeams() {
                 <article className="layout narrow">
                     <div className="pad-med">
                         <p>You are not a member of any team yet.</p>
-                        <p><a href="#">Browse all teams</a> to join one, or use the button bellow to cerate your own
-                            team.</p>
+                        <p>
+                            <Link to="/teams">Browse all teams</Link> to join one, or use the button bellow to cerate your own
+                            team.
+                        </p>
                     </div>
-                    <div className=""><a href="#" className="action cta">Create Team</a></div>
+                    <div><Link to="/teams/create-team" className="action cta">Create Team</Link></div>
                 </article>
             }
         </section>

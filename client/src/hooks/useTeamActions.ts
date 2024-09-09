@@ -8,6 +8,7 @@ type UseTeamActionsReturn = {
     removeMember: (memberId: string) => Promise<void>;
     approvePending: (memberId: string) => Promise<Member | undefined>;
     error: Error | null;
+    clearError: () => void
 };
 
 export function useTeamActions(team: Teams): UseTeamActionsReturn {
@@ -40,5 +41,9 @@ export function useTeamActions(team: Teams): UseTeamActionsReturn {
         }
     };
 
-    return { joinTeam, removeMember, approvePending, error };
+    const clearError = () => {
+        setError(null);
+    }
+
+    return { joinTeam, removeMember, approvePending, error, clearError };
 }

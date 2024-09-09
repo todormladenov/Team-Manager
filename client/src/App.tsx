@@ -11,6 +11,7 @@ import TeamDetails from './components/teams/TeamDetails'
 import { AuthContextProvider } from './components/context/AuthContext'
 import MyTeams from './components/teams/my-teams/MyTeams'
 import Footer from './components/footer/Footer'
+import AuthView from './components/rout-guard/AuthView'
 
 function App() {
   return (
@@ -25,10 +26,14 @@ function App() {
             <Route path='/auth/login' element={<Login />} />
             <Route path='/auth/register' element={<Register />} />
             <Route path='/teams' element={<TeamsCatalog />} />
-            <Route path='/teams/create-team' element={<CreateTeam />} />
-            <Route path='/teams/edit-team/:teamId' element={<EditTeam />} />
             <Route path='/teams/details/:teamId' element={<TeamDetails />} />
-            <Route path='/teams/my-teams' element={<MyTeams />} />
+
+            <Route element={<AuthView />} >
+              <Route path='/teams/create-team' element={<CreateTeam />} />
+              <Route path='/teams/edit-team/:teamId' element={<EditTeam />} />
+              <Route path='/teams/my-teams' element={<MyTeams />} />
+            </Route>
+
           </Routes>
         </div>
       </AuthContextProvider>

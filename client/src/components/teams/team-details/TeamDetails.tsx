@@ -1,9 +1,10 @@
 import { Link, useParams } from "react-router-dom";
-import { useGetOneTeam } from "../../hooks/useGetOneTeam";
+import { useGetOneTeam } from "../../../hooks/useGetOneTeam";
 import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
-import { useCheckUserStatus } from "../../hooks/useCheckUserStatus";
-import { useTeamActions } from "../../hooks/useTeamActions";
+import { AuthContext } from "../../context/AuthContext";
+import { useCheckUserStatus } from "../../../hooks/useCheckUserStatus";
+import { useTeamActions } from "../../../hooks/useTeamActions";
+import UserActions from "./team-details-components/UserActions ";
 
 export default function TeamDetails() {
     const { isAuth, _id } = useContext(AuthContext);
@@ -49,13 +50,13 @@ export default function TeamDetails() {
                     <p>{team?.description}</p>
                     <span className="details">{team?.members.length} Members</span>
                     {isAuth &&
-                        <div>
-                            {userStatus === 'owner' && <Link to={`/teams/edit-team/${teamId}`} className="action">Edit team</Link>}
-                            {userStatus === 'member' && <Link to="#" onClick={() => removeMemberHandler(userMembershipId)} className="action invert">Leave team</Link>}
-                            {userStatus === 'nonMember' && <Link to="#" onClick={joinTeamHandler} className="action">Join team</Link>}
-                            {userStatus === 'pending' && <>Membership pending. <Link to="#" onClick={() => removePendingHandler(userMembershipId)}>Cancel request</Link></>}
-                        </div>
-                    }
+                        <UserActions
+                            userStatus={userStatus}
+                            teamId={teamId}
+                            onJoin={joinTeamHandler}
+                            onLeave={() => removeMemberHandler(userMembershipId)}
+                            onCancelRequest={() => removePendingHandler(userMembershipId)}
+                        />}
                 </div>
                 <div className="pad-large">
                     <h3>Members</h3>

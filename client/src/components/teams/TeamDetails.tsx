@@ -3,52 +3,40 @@ import { useGetOneTeam } from "../../hooks/useGetOneTeam";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useCheckUserStatus } from "../../hooks/useCheckUserStatus";
-import { approveJoinTeamReq, deleteMember, getMemberById, joinTeamReq } from "../../services/membersAPI";
+import { useTeamActions } from "../../hooks/useTeamActions";
 
 export default function TeamDetails() {
     const { isAuth, _id } = useContext(AuthContext);
     const { teamId } = useParams();
     const { team, changeTeamState, ActionType } = useGetOneTeam(teamId);
     const { userStatus, userMembershipId, changeUserInfoState } = useCheckUserStatus(team, _id);
+    const { joinTeam, removeMember, approvePending, error } = useTeamActions(team)
 
-    const joinTeam = async () => {
-        try {
-            const member = await joinTeamReq(team._id);
+    const joinTeamHandler = async () => {
+        const member = await joinTeam();
+        if (member) {
             changeTeamState(ActionType.JOIN_TEAM, undefined, member);
             changeUserInfoState('pending', member._id);
-        } catch (error) {
-
         }
     }
 
     const removeMemberHandler = async (memberId: string) => {
-        try {
-            await deleteMember(memberId);
-            changeTeamState(ActionType.REMOVE_MEMBER, memberId);
-            changeUserInfoState('nonMember', '');
-        } catch (error) {
-            //Add Error handling 
-        }
+        await removeMember(memberId);
+        changeTeamState(ActionType.REMOVE_MEMBER, memberId);
+        changeUserInfoState('nonMember', '');
     }
 
     const removePendingHandler = async (memberId: string) => {
-        try {
-            await deleteMember(memberId);
-            changeTeamState(ActionType.REMOVE_PENDING, memberId);
-            changeUserInfoState('nonMember', '');
-        } catch (error) {
-            //Add Error handling 
-        }
+        await removeMember(memberId);
+        changeTeamState(ActionType.REMOVE_PENDING, memberId);
+        changeUserInfoState('nonMember', '');
     }
 
     const approvePendingHandler = async (memberId: string) => {
-        try {
-            await approveJoinTeamReq(memberId, { status: 'member' });
-            const member = await getMemberById(memberId);
+        const member = await approvePending(memberId);
+        if (member) {
             changeTeamState(ActionType.APPROVE_PENDING, member._id, member);
             changeUserInfoState('member', member._id);
-        } catch (error) {
-
         }
     }
 
@@ -64,7 +52,7 @@ export default function TeamDetails() {
                         <div>
                             {userStatus === 'owner' && <Link to={`/teams/edit-team/${teamId}`} className="action">Edit team</Link>}
                             {userStatus === 'member' && <Link to="#" onClick={() => removeMemberHandler(userMembershipId)} className="action invert">Leave team</Link>}
-                            {userStatus === 'nonMember' && <Link to="#" onClick={joinTeam} className="action">Join team</Link>}
+                            {userStatus === 'nonMember' && <Link to="#" onClick={joinTeamHandler} className="action">Join team</Link>}
                             {userStatus === 'pending' && <>Membership pending. <Link to="#" onClick={() => removePendingHandler(userMembershipId)}>Cancel request</Link></>}
                         </div>
                     }

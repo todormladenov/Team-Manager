@@ -8,13 +8,14 @@ import UserActions from "./team-details-components/UserActions ";
 import MemberList from "./team-details-components/MemberList";
 import MembershipRequestsList from "./team-details-components/MembershipRequestsListProps";
 import TeamInfo from "./team-details-components/TeamInfo";
+import OverlayDialog from "../../overlay-dialog/OverlayDialog";
 
 export default function TeamDetails() {
     const { isAuth, _id } = useContext(AuthContext);
     const { teamId } = useParams();
     const { team, changeTeamState, ActionType } = useGetOneTeam(teamId);
     const { userStatus, userMembershipId, changeUserInfoState } = useCheckUserStatus(team, _id);
-    const { joinTeam, removeMember, approvePending, error } = useTeamActions(team)
+    const { joinTeam, removeMember, approvePending, error, clearError } = useTeamActions(team)
 
     const joinTeamHandler = async () => {
         const member = await joinTeam();
@@ -47,7 +48,13 @@ export default function TeamDetails() {
     return (
         <section id="team-home">
             <article className="layout">
-                
+
+                {error &&
+                    <OverlayDialog
+                        message={error.message}
+                        onClose={clearError}
+                    />}
+
                 <TeamInfo team={team} />
 
                 {isAuth &&

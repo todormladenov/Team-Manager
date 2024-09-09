@@ -5,6 +5,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { useCheckUserStatus } from "../../../hooks/useCheckUserStatus";
 import { useTeamActions } from "../../../hooks/useTeamActions";
 import UserActions from "./team-details-components/UserActions ";
+import MemberList from "./team-details-components/MemberList";
 
 export default function TeamDetails() {
     const { isAuth, _id } = useContext(AuthContext);
@@ -58,18 +59,13 @@ export default function TeamDetails() {
                             onCancelRequest={() => removePendingHandler(userMembershipId)}
                         />}
                 </div>
-                <div className="pad-large">
-                    <h3>Members</h3>
-                    <ul className="tm-members">
-                        {team?.members.map(member =>
-                            <li key={member._id}>{member.user?.username}
-                                {userStatus === 'owner' &&
-                                    <Link to='#' onClick={() => removeMemberHandler(member._id)} className="tm-control action">Remove from team</Link>
-                                }
-                            </li>)
-                        }
-                    </ul>
-                </div>
+
+                <MemberList
+                    members={team.members}
+                    userStatus={userStatus}
+                    onRemoveMember={removeMemberHandler}
+                />
+
                 {userStatus === 'owner' &&
                     <div className="pad-large">
                         <h3>Membership Requests</h3>

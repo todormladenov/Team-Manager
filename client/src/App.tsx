@@ -10,6 +10,7 @@ import TeamsCatalog from './components/teams/teams-catalog/TeamsCatalog'
 import TeamDetails from './components/teams/TeamDetails'
 import { AuthContextProvider } from './components/context/AuthContext'
 import MyTeams from './components/teams/my-teams/MyTeams'
+import Footer from './components/footer/Footer'
 
 function App() {
   return (
@@ -31,6 +32,8 @@ function App() {
           </Routes>
         </div>
       </AuthContextProvider>
+
+      <Footer />
     </>
   )
 }

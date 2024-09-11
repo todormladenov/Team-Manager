@@ -1,16 +1,23 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TeamLayout from "./TeamLayout";
 import { useTeams } from "../../../hooks/useTeams";
-import { Teams } from "../../../types/teams";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import OverlayDialog from "../../overlay-dialog/OverlayDialog";
 
 export default function TeamsCatalog() {
-    const teams: Teams[] = useTeams();
+    const navigator = useNavigate();
+    const { teams, error } = useTeams();
     const { isAuth } = useContext(AuthContext);
 
     return (
         <section id="browse">
+
+            {error &&
+                <OverlayDialog
+                    message={error.message}
+                    onClose={() => navigator(-1)}
+                />}
 
             <article className="pad-med">
                 <h1>Team Browser</h1>

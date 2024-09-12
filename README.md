@@ -2,7 +2,7 @@
 This project is a learning exercise focused on building a team management system using React and TypeScript. It allows users to create, manage, and join teams.
 
 ## Deployment
-The application is deployed on Firebase. You can access it [here](https://team-manager-912.web.app/)
+The application is deployed on Firebase. You can access it [here](https://team-manager-project-app-390.web.app/)
 
 ## Functionality 
 * Registering users.
